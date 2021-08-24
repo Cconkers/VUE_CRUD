@@ -1,32 +1,48 @@
 <template>
-    <div>
-        <div class="card">
-        <div class="card-header">Empleados</div>
-        <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>NOMBRE</th>
-                        <th>CORREO</th>
-                        <th>ACCIONES</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="empleado in empleados" :key="empleado.id">
-                        <td>{{ empleado.id }}</td>
-                        <td>{{ empleado.nombre }}</td>
-                        <td>{{ empleado.correo }} </td>
-                        <td>
-        <a name="" id="" class="btn  btn-primary" href="#" role="button">Editar</a>
-        <a name="" id="" class="btn ml-2 btn-primary" href="#" role="button">Borrar</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        </div>
-        </div>
+  <div class="container">
+    <router-link to="/crear" class="btn btn-success">Agregar</router-link>
+    <br />
+    <br />
+    <div class="card">
+      <div class="card-header">Empleados</div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NOMBRE</th>
+              <th>CORREO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="empleado in empleados" :key="empleado.id">
+              <td>{{ empleado.id }}</td>
+              <td>{{ empleado.nombre }}</td>
+              <td>{{ empleado.correo }}</td>
+              <td>
+                <div class="btn-group" role="group" aria-label="">
+                  <router-link
+                    class="btn btn-info"
+                    :to="{ name: 'Editar', params: { id: empleado.id } }"
+                    >Editar</router-link
+                  >
+
+                  <button
+                    v-on:click="borrarEmpleado(empleado.id)"
+                    type="button"
+                    class="btn btn-danger ml-1"
+                  >
+                    Borrar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -49,6 +65,16 @@ export default {
           if (typeof datosRespuesta[0].success === "undefined") {
             this.empleados = datosRespuesta;
           }
+        })
+        .catch(console.log);
+    },
+
+    borrarEmpleado(id) {
+      fetch("http://localhost/empleados/?borrar=" + id)
+        .then((respuesta) => respuesta.json())
+        .then((datosRespuesta) => {
+          console.log(datosRespuesta);
+          window.location.href = "listar";
         })
         .catch(console.log);
     },
